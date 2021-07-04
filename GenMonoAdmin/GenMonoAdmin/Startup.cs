@@ -38,6 +38,18 @@ namespace GenMonoAdmin
 
             services.AddControllers();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "GenMonoAdminHTTPS", builder =>
+                {
+                    builder.WithOrigins("*", "*");
+                    builder.AllowAnyHeader();
+                    builder.AllowAnyMethod();
+                    builder.AllowCredentials();
+                    builder.SetIsOriginAllowed(origin => true);
+                });
+            });
+
             services.AddTransient<IAccountDbHelper, AccountDbHelper>(ad => {
                 string ConnectionString = ad.GetService<IConfiguration>()["ConnectionString"];
                 return new AccountDbHelper(ConnectionString);
@@ -62,6 +74,9 @@ namespace GenMonoAdmin
             app.UseRouting();
 
             app.UseAuthentication();
+
+            app.UseCors("GenMonoAdminHTTPS");
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
