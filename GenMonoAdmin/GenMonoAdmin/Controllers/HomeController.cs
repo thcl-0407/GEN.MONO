@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GenMonoAdmin.Controllers
 {
     [ApiController]
-    [Route("/api/admin")]
+    [Route("/api/home")]
     [AllowAnonymous]
     public class HomeController : Controller
     {

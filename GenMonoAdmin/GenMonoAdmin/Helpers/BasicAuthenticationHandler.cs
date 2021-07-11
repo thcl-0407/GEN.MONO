@@ -30,13 +30,20 @@ namespace GenMonoAdmin.Helpers
         {
             var enpoint = Context.GetEndpoint();
 
-            if (enpoint.Metadata?.GetMetadata<IAllowAnonymous>() != null)
+            if(enpoint != null && enpoint.Metadata != null)
+            {
+                if (enpoint.Metadata?.GetMetadata<IAllowAnonymous>() != null)
+                {
+                    return Task.FromResult(AuthenticateResult.NoResult());
+                }
+                else if (!Request.Headers.ContainsKey("Authorization"))
+                {
+                    return Task.FromResult(AuthenticateResult.Fail("Missing Authorization Header"));
+                }
+            }
+            else
             {
                 return Task.FromResult(AuthenticateResult.NoResult());
-            }
-            else if (!Request.Headers.ContainsKey("Authorization"))
-            {
-                return Task.FromResult(AuthenticateResult.Fail("Missing Authorization Header"));
             }
 
             try
